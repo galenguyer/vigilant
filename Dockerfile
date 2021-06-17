@@ -15,4 +15,4 @@ RUN pipenv install
 ADD . /opt/vigilant/
 
 ENTRYPOINT [ "pipenv", "run", "gunicorn", "vigilant:app" ]
-CMD [ "--bind=0.0.0.0:8080", "--access-logfile=-" ]
+CMD [ "--bind=0.0.0.0:8080", "--access-logfile=-", "--worker-class=gevent" ]

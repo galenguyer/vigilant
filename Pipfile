@@ -9,6 +9,7 @@ gunicorn = "*"
 python-dotenv = "*"
 docker = "*"
 six = "*"
+gevent = ">=1.4"
 
 [dev-packages]
 
