@@ -1,1 +1,1 @@
-from demo import app
+from vigilant import app

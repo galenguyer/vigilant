@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vigilant</title>
+    <style>
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        pre {
+            overflow-x: auto;
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+        }
+
+        #root {
+            padding-left: 16px;
+        }
+
+        .containers {
+            display: flex;
+        }
+
+        .group > .name {
+            padding-left: 16px;
+        }
+
+        .group {
+            margin-bottom: 16px;
+        }
+
+        .container {
+            padding: 8px;
+            margin: 8px;
+        }
+
+        .group>.name {
+            font-size: 120%;
+        }
+
+        .container>.name {
+            font-size: 110%;
+        }
+
+        .container .uptime {
+            font-size: 80%;
+            font-style: italic;
+            color: rgb(50, 50, 50);
+        }
+
+        .break {
+            flex-basis: 100%;
+            height: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="padding-left: 16px;">Vigilant</h1>
+    <div id="root">
+    </div>
+    <script>
+        let eventSource = new EventSource("/api/v1/stream");
+
+        eventSource.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            console.log(event.data);
+            // get a list of all groups, adding ungrouped to the end if needed
+            var groups = [];
+            var addUngrouped = false;
+            for (var index in data.running_containers) {
+                const container = data.running_containers[index];
+                if (container.group != "") {
+                    groups.push(container.group);
+                }
+                else addUngrouped = true;
+            }
+            groups.sort();
+            if (addUngrouped) groups.push("ungrouped");
+
+            document.getElementById("root").innerHTML = ""
+            groups.forEach(group => {
+                document.getElementById("root").innerHTML += `
+                <div class="group">
+                    <div class="name">${group}</div>
+                    <div class="containers" id="${group}">
+                    </div>
+                </div>`
+            });
+
+            data.running_containers.forEach(container => {
+                const uptime = timeDifference(new Date(container.started_at), new Date());
+                document.getElementById(container.group == "" ? "ungrouped" : container.group).innerHTML += `
+                    <div class="container">
+                        <span class="name">${container.name}</span>
+                        <div class="break"></div>
+                        <span class="uptime">(up ${uptime})</span>        
+                    </div>\n`
+            });
+        };
+
+        function replaceLast(find, replace, string) {
+            var lastIndex = string.lastIndexOf(find);
+
+            if (lastIndex === -1) {
+                return string;
+            }
+
+            var beginString = string.substring(0, lastIndex);
+            var endString = string.substring(lastIndex + find.length);
+
+            return beginString + replace + endString;
+        }
+
+
+        function timeDifference(start, end) {
+            var seconds = Math.round((end - start) / 1000)
+            var formattedText = "";
+            if (seconds > (60 * 60 * 24)) {
+                const days = Math.floor(seconds / (60 * 60 * 24));
+                seconds = seconds % (60 * 60 * 24);
+                if (days == 1) {
+                    formattedText += `${days} day, `;
+                }
+                else {
+                    formattedText += `${days} days, `;
+                }
+            }
+            if (seconds > (60 * 60)) {
+                const hours = Math.floor(seconds / (60 * 60));
+                seconds = seconds % (60 * 60);
+                if (hours == 1) {
+                    formattedText += `${hours} hour, `;
+                }
+                else {
+                    formattedText += `${hours} hours, `;
+                }
+            }
+            if (seconds > 60) {
+                const minutes = Math.floor(seconds / 60);
+                seconds = seconds % 60;
+                if (minutes == 1) {
+                    formattedText += `${minutes} minute, `;
+                }
+                else {
+                    formattedText += `${minutes} minutes, `;
+                }
+            }
+            if (seconds > 0) {
+                if (seconds == 1) {
+                    formattedText += `${seconds} second`;
+                }
+                else {
+                    formattedText += `${seconds} seconds`;
+                }
+            }
+            return replaceLast(",", " and ", formattedText.trimEnd("").replace(/,$/, ""));
+        }
+    </script>
+</body>
+
+</html>

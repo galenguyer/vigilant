@@ -6,13 +6,13 @@ RUN cp /usr/share/zoneinfo/America/New_York /etc/localtime && \
 
 RUN pip install pipenv
 
-WORKDIR /opt/demo/
+WORKDIR /opt/vigilant/
 
-ADD Pipfile Pipfile.lock /opt/demo/
+ADD Pipfile Pipfile.lock /opt/vigilant/
 
 RUN pipenv install
 
-ADD . /opt/demo/
+ADD . /opt/vigilant/
 
-ENTRYPOINT [ "pipenv", "run", "gunicorn", "demo:app" ]
+ENTRYPOINT [ "pipenv", "run", "gunicorn", "vigilant:app" ]
 CMD [ "--bind=0.0.0.0:8080", "--access-logfile=-" ]

@@ -1,4 +1,4 @@
-from demo import app
+from vigilant import app
 from flask import request, jsonify
 
 
