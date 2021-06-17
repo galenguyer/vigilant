@@ -124,38 +124,38 @@
                 const days = Math.floor(seconds / (60 * 60 * 24));
                 seconds = seconds % (60 * 60 * 24);
                 if (days == 1) {
-                    formattedText += `${days} day, `;
+                    return `~${days} day`;
                 }
                 else {
-                    formattedText += `${days} days, `;
+                    return `~${days} days`;
                 }
             }
             if (seconds > (60 * 60)) {
                 const hours = Math.floor(seconds / (60 * 60));
                 seconds = seconds % (60 * 60);
                 if (hours == 1) {
-                    formattedText += `${hours} hour, `;
+                    return `~${hours} hour `;
                 }
                 else {
-                    formattedText += `${hours} hours, `;
+                    return `~${hours} hours`;
                 }
             }
             if (seconds > 60) {
                 const minutes = Math.floor(seconds / 60);
                 seconds = seconds % 60;
                 if (minutes == 1) {
-                    formattedText += `${minutes} minute, `;
+                    return `~${minutes} minute`;
                 }
                 else {
-                    formattedText += `${minutes} minutes, `;
+                    return `~${minutes} minutes`;
                 }
             }
             if (seconds > 0) {
                 if (seconds == 1) {
-                    formattedText += `${seconds} second`;
+                    return `${seconds} second`;
                 }
                 else {
-                    formattedText += `${seconds} seconds`;
+                    return `${seconds} seconds`;
                 }
             }
             return replaceLast(",", " and ", formattedText.trimEnd("").replace(/,$/, ""));
