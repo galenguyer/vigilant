@@ -74,7 +74,7 @@
             var addUngrouped = false;
             for (var index in data.running_containers) {
                 const container = data.running_containers[index];
-                if (container.group != "") {
+                if (container.group != "" && !groups.includes(container.group)) {
                     groups.push(container.group);
                 }
                 else addUngrouped = true;
