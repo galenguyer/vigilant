@@ -35,11 +35,8 @@ def get_status():
     return data
 
 
-num = 0
 def get_stream():
-    global num
     while True:
-        num = num + 1
         yield "data: {}\n\n".format(json.dumps(get_status()))
         time.sleep(5)
 
