@@ -1,9 +1,11 @@
+import os
 import time
 import json
 
 import docker
 from flask import Flask
 from config import Config
+from yaml import safe_load
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -32,6 +34,10 @@ def get_status():
             cont["started_at"] = container.attrs["State"]["StartedAt"]
             #cont["labels"] = {key:value for (key, value) in container.labels.items() if "vigilant" in key}
             data["running_containers"].append(cont)
+    if os.path.exists(app.config["STATE_FILE"]):
+        with open(app.config["STATE_FILE"], 'r') as file:
+            expected_state = safe_load(file.read())
+            data["expected_state"] = expected_state
     return data
 
 

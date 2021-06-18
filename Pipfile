@@ -10,6 +10,7 @@ python-dotenv = "*"
 docker = "*"
 six = "*"
 gevent = ">=1.4"
+pyyaml = "*"
 
 [dev-packages]
 

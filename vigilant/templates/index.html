@@ -39,7 +39,7 @@
             margin: 8px;
         }
 
-        .group > .name {
+        .group>.name {
             font-size: 160%;
         }
 
@@ -97,12 +97,34 @@
             data.running_containers.forEach(container => {
                 const uptime = timeDifference(new Date(container.started_at), new Date());
                 document.getElementById(container.group == "" ? "ungrouped" : container.group).innerHTML += `
-                    <div class="container">
+                    <div class="container" id="${container.group == "" ? "ungrouped" : container.group}-${container.name}">
                         <span class="name">${container.name}</span>
                         <div class="break"></div>
                         <span class="uptime">(up ${uptime})</span>        
                     </div>\n`
             });
+
+            for (let group of Object.keys(data.expected_state)) {
+                if (document.getElementById(group) == null) {
+                    document.getElementById("root").innerHTML += `
+                        <div class="group">
+                            <div class="name">${group}</div>
+                            <div class="containers" id="${group}">
+                            </div>
+                        </div>`
+                }
+                data.expected_state[group].forEach(container => {
+                    if (document.getElementById(`${group}-${container}`) == null) {
+                        document.getElementById(group).innerHTML += `
+                            <div class="container" id="${group}-${container.name}">
+                                <span class="name">${container}</span>
+                                <div class="break"></div>
+                                <span class="uptime">(missing)</span>        
+                            </div>\n`
+                    }
+                })
+            }
+
         };
 
         function replaceLast(find, replace, string) {

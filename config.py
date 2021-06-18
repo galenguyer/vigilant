@@ -10,3 +10,4 @@ load_dotenv(dotenv_path)
 
 class Config(object):
     SECRET_KEY = os.environ.get("SECRET_KEY") or "".join(secrets.token_hex(16))
+    STATE_FILE = os.environ.get("STATE_FILE") or "./config/state.yaml"
