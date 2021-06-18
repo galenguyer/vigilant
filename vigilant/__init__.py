@@ -38,6 +38,6 @@ def get_status():
 def get_stream():
     while True:
         yield "data: {}\n\n".format(json.dumps(get_status()))
-        time.sleep(5)
+        time.sleep(30)
 
 from vigilant import routes, errors
