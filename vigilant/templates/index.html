@@ -35,8 +35,15 @@
         }
 
         .container {
+            min-width: 110px;
             padding: 8px;
             margin: 8px;
+            border-bottom: 3px solid rgb(50, 200, 50);
+            border-radius: 3px;
+        }
+        .container.down {
+            border-bottom: 3px solid red;
+            border-radius: 3px;
         }
 
         .group>.name {
@@ -116,7 +123,7 @@
                 data.expected_state[group].forEach(container => {
                     if (document.getElementById(`${group}-${container}`) == null) {
                         document.getElementById(group).innerHTML += `
-                            <div class="container" id="${group}-${container.name}">
+                            <div class="container down" id="${group}-${container.name}">
                                 <span class="name">${container}</span>
                                 <div class="break"></div>
                                 <span class="uptime">(missing)</span>        
