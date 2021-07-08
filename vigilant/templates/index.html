@@ -33,20 +33,35 @@
         }
 
         .group {
-            padding: 2rem;
-            margin-bottom: 16px;
+            padding: 0.5rem;
+            margin: 1.5rem;
+            border-radius: 3px;
+        }
+
+        .group.healthy {
+            border: 1px solid rgb(50, 200, 50);
+            border-bottom: 3px solid rgb(50, 200, 50);
+        }
+        .group.unhealthy {
+            border: 1px solid rgb(206, 134, 2);
+            border-bottom: 3px solid rgb(206, 134, 2);
+        }
+        .group.down {
+            border: 1px solid red;
+            border-bottom: 3px solid red;
         }
 
         .container {
             min-width: 110px;
             padding: 8px;
             margin: 8px;
-            border-bottom: 3px solid rgb(50, 200, 50);
             border-radius: 3px;
+        }
+        .container.up {
+            border-bottom: 3px solid rgb(50, 200, 50);
         }
         .container.down {
             border-bottom: 3px solid red;
-            border-radius: 3px;
         }
 
         .group>.name {
@@ -98,7 +113,7 @@
             document.getElementById("root").innerHTML = ""
             groups.forEach(group => {
                 document.getElementById("root").innerHTML += `
-                <div class="group">
+                <div id="${group}-container" class="group healthy">
                     <div class="name">${group}</div>
                     <div class="containers" id="${group}">
                     </div>
@@ -108,7 +123,7 @@
             data.running_containers.forEach(container => {
                 const uptime = timeDifference(new Date(container.started_at), new Date());
                 document.getElementById(container.group == "" ? "ungrouped" : container.group).innerHTML += `
-                    <div class="container" id="${container.group == "" ? "ungrouped" : container.group}-${container.name}">
+                    <div class="container up" id="${container.group == "" ? "ungrouped" : container.group}-${container.name}">
                         <span class="name">${container.name}</span>
                         <div class="break"></div>
                         <span class="uptime">(up ${uptime})</span>        
@@ -118,7 +133,7 @@
             for (let group of Object.keys(data.expected_state)) {
                 if (document.getElementById(group) == null) {
                     document.getElementById("root").innerHTML += `
-                        <div class="group">
+                        <div class="group down">
                             <div class="name">${group}</div>
                             <div class="containers" id="${group}">
                             </div>
@@ -126,6 +141,7 @@
                 }
                 data.expected_state[group].forEach(container => {
                     if (document.getElementById(`${group}-${container}`) == null) {
+                        document.getElementById(`${group}-container`).className = "group unhealthy"
                         document.getElementById(group).innerHTML += `
                             <div class="container down" id="${group}-${container.name}">
                                 <span class="name">${container}</span>
