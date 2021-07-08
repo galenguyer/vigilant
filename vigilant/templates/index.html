@@ -133,7 +133,7 @@
             for (let group of Object.keys(data.expected_state)) {
                 if (document.getElementById(group) == null) {
                     document.getElementById("root").innerHTML += `
-                        <div class="group down">
+                        <div id="${group}-container" class="group down">
                             <div class="name">${group}</div>
                             <div class="containers" id="${group}">
                             </div>
@@ -142,7 +142,7 @@
                 data.expected_state[group].forEach(container => {
                     if (document.getElementById(`${group}-${container}`) == null) {
                         document.getElementById(`${group}-container`).className = "group unhealthy"
-                        document.getElementById(group).innerHTML += `
+                        document.getElementById(`${group}`).innerHTML += `
                             <div class="container down" id="${group}-${container.name}">
                                 <span class="name">${container}</span>
                                 <div class="break"></div>
